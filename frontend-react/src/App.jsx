@@ -5,7 +5,7 @@ import AddProduct from "./pages/AddProduct";
 import StatsPage from "./pages/StatsPage";
 import EditProduct from "./pages/EditProduct";
 import BrowseProducts from "./pages/BrowseProducts";
-
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -21,6 +21,7 @@ function App() {
         <Route path="/browse" element={<BrowseProducts />} />
 
       </Routes>
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { toast, ToastContainer } from 'react-toastify'; // Import Toast functions
+
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ function AuthPage() {
   const [signupError, setSignupError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState("");
 
-  const loginInputRef = useRef(null); // 👈 Reference to login username input
+  const loginInputRef = useRef(null); // Reference to login username input
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,9 +29,11 @@ function AuthPage() {
         password: loginPassword,
       });
       localStorage.setItem("token", res.data.token);
+      toast.success("Login successful!"); // Show success toast
       navigate("/dashboard");
     } catch {
       setLoginError("Invalid credentials or server error.");
+      toast.error("Login failed. Please check your credentials."); // Show error toast
     }
   };
 
@@ -44,18 +48,21 @@ function AuthPage() {
         role: signupRole,
       });
       setSignupSuccess("Signup successful. You can now log in.");
+      toast.success("Signup successful! You can now log in."); // Show success toast
       setSignupUsername("");
       setSignupPassword("");
       setSignupRole("Buyer");
 
-      // 👇 Auto-fill and focus login input
+      // Auto-fill and focus login input
       setLoginUsername(signupUsername);
       setTimeout(() => loginInputRef.current?.focus(), 100);
     } catch (err) {
       if (err.response?.status === 400) {
         setSignupError("User already exists or invalid data.");
+        toast.error("User already exists or invalid data."); // Show error toast
       } else {
         setSignupError("Server error.");
+        toast.error("Server error. Please try again later."); // Show error toast
       }
     }
   };
@@ -79,9 +86,8 @@ function AuthPage() {
               placeholder="Username"
               value={loginUsername}
               onChange={(e) => setLoginUsername(e.target.value)}
-              ref={loginInputRef} // 👈 Ref attached
+              ref={loginInputRef} // Ref attached
               className="w-full p-3 rounded-lg border border-black dark:border-black bg-white dark:bg-gray-700 text-black dark:text-white"
-              autoComplete="off" 
               required
             />
             <input
@@ -90,7 +96,6 @@ function AuthPage() {
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
               className="w-full p-3 rounded-lg border border-black dark:border-black bg-white dark:bg-gray-700 text-black dark:text-white"
-
               required
             />
             {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
@@ -113,7 +118,6 @@ function AuthPage() {
               value={signupUsername}
               onChange={(e) => setSignupUsername(e.target.value)}
               className="w-full p-3 rounded-lg border border-black dark:border-black bg-white dark:bg-gray-700 text-black dark:text-white"
-
               required
             />
             <input
@@ -122,14 +126,12 @@ function AuthPage() {
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
               className="w-full p-3 rounded-lg border border-black dark:border-black bg-white dark:bg-gray-700 text-black dark:text-white"
-
               required
             />
             <select
               value={signupRole}
               onChange={(e) => setSignupRole(e.target.value)}
               className="w-full p-3 rounded-lg border border-black dark:border-black bg-white dark:bg-gray-700 text-black dark:text-white"
-
             >
               <option value="Admin">Admin</option>
               <option value="Buyer">Buyer</option>
@@ -147,6 +149,9 @@ function AuthPage() {
           </form>
         </div>
       </motion.div>
+
+      {/* ToastContainer for Toast notifications */}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 }

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { CSVLink } from "react-csv";
+import { toast } from 'react-toastify';
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -39,7 +42,8 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/auth");
+    toast.success("You have been logged out!");
+    navigate("/");
   };
 
   const handleDelete = async (id) => {
@@ -106,6 +110,32 @@ function Dashboard() {
             </Link>
           </div>
         )}
+
+{(userData.role === "Admin" || userData.role === "Owner") && products.length > 0 && (
+  <div className="text-right mb-4">
+    <CSVLink
+      data={products.map(p => ({
+        name: p.name,
+        price: p.price,
+        quantity: p.quantity,
+        location: p.location,
+        createdBy: p.createdBy
+      }))}
+      headers={[
+        { label: "Product Name", key: "name" },
+        { label: "Price", key: "price" },
+        { label: "Quantity", key: "quantity" },
+        { label: "Location", key: "location" },
+        { label: "Created By", key: "createdBy" }
+      ]}
+      filename={"products_export.csv"}
+      className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+    >
+      Export to CSV
+    </CSVLink>
+  </div>
+)}
+
 
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
           Products
