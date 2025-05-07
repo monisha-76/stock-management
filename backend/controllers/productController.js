@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const User = require("../models/User");
 const { maskData, unmaskData } = require("../utils/maskUtil");
 
 // Only for Sellers — masked data + creator tracking
@@ -12,7 +13,7 @@ exports.createProduct = async (req, res) => {
       quantity,
       location,
       maskedData: masked,
-      createdBy: req.user.username // Save creator info
+      createdBy: req.user.username
     });
 
     await product.save();
@@ -32,16 +33,13 @@ exports.getProductsByRole = async (req, res) => {
     let products;
 
     if (role === "Seller") {
-      // Sellers only see their own products
       products = await Product.find({ createdBy: username });
-    } else if (role === "Admin" || role === "Buyer" || role === "Owner") {
-      // Admin, Buyer, Owner see all products
+    } else if (["Admin", "Buyer", "Owner"].includes(role)) {
       products = await Product.find();
     } else {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    // Decrypt/mask each product
     const decryptedProducts = products.map((p) => {
       let unmasked;
       try {
@@ -67,6 +65,69 @@ exports.getProductsByRole = async (req, res) => {
     res.json(decryptedProducts);
   } catch (err) {
     console.error("Error in getProductsByRole:", err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Admin can DELETE any product
+exports.deleteProduct = async (req, res) => {
+  try {
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Product not found" });
+    res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error("Error in deleteProduct:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Admin can UPDATE any product
+exports.updateProduct = async (req, res) => {
+  const { name, price, quantity, location } = req.body;
+
+  try {
+    const masked = maskData(`${name}-${location}`);
+    const updated = await Product.findByIdAndUpdate(
+      req.params.id,
+      { name, price, quantity, location, maskedData: masked },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Product not found" });
+
+    res.json({ message: "Product updated successfully", product: updated });
+  } catch (err) {
+    console.error("Error in updateProduct:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Owner-only: Get stats about products and users
+exports.getOwnerStats = async (req, res) => {
+  try {
+    const totalProducts = await Product.countDocuments();
+    const totalQuantity = await Product.aggregate([
+      { $group: { _id: null, total: { $sum: "$quantity" } } }
+    ]);
+
+    const totalSellers = await User.countDocuments({ role: "Seller" });
+    const totalBuyers = await User.countDocuments({ role: "Buyer" });
+
+    const topSellers = await Product.aggregate([
+      { $group: { _id: "$createdBy", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 3 }
+    ]);
+
+    res.json({
+      totalProducts,
+      totalQuantity: totalQuantity[0]?.total || 0,
+      totalSellers,
+      totalBuyers,
+      topSellers
+    });
+  } catch (err) {
+    console.error("Error in getOwnerStats:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
