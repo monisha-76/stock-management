@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware");
-const { createProduct, getProducts } = require("../controllers/productController");
+const allowRoles = require("../middleware/roleMiddleware");
 
-router.post("/", auth, createProduct);      // Protected
-router.get("/", auth, getProducts);         // Protected
+// Import role-based controllers from productController.js
+const { createProduct, getProductsByRole } = require("../controllers/productController");
+
+// Only Sellers can add products
+router.post("/", auth, allowRoles("Seller"), createProduct);
+
+// All roles can GET products (filtering is done in the controller)
+router.get("/", auth, getProductsByRole);
 
 module.exports = router;

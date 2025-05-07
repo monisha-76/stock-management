@@ -55,13 +55,14 @@ function Dashboard() {
 
         {userData.role === "Seller" && (
           <div className="mb-4">
-            <Link to="/seller-products">
-              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
-                Manage My Products
-              </button>
-            </Link>
-          </div>
+           <Link to="/add-product">
+           <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
+             Add New Product
+           </button>
+           </Link>
+         </div>
         )}
+
 
         {userData.role === "Buyer" && (
           <div className="mb-4">

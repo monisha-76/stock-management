@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema({
   quantity: Number,
   maskedData: String,
   location: String,
+  createdBy: { type: String, required: true }, // Added to track product owner (username)
   createdAt: { type: Date, default: Date.now }
 });
 
