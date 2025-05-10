@@ -11,6 +11,7 @@ function AddProduct() {
     location: "",
   });
 
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const [role, setRole] = useState("");
 
@@ -25,7 +26,6 @@ function AddProduct() {
       const decoded = jwtDecode(token);
       setRole(decoded.role);
 
-      // ✅ Only Seller allowed
       if (decoded.role !== "Seller") {
         alert("Access Denied: Only Sellers can add products.");
         navigate("/dashboard");
@@ -38,10 +38,32 @@ function AddProduct() {
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Product name is required.";
+    if (!formData.price || isNaN(formData.price) || Number(formData.price) <= 0)
+      newErrors.price = "Enter a valid price.";
+    if (
+      !formData.quantity ||
+      isNaN(formData.quantity) ||
+      Number(formData.quantity) < 0 ||
+      !Number.isInteger(Number(formData.quantity))
+    )
+      newErrors.quantity = "Enter a valid quantity.";
+    if (!formData.location.trim()) newErrors.location = "Location is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
     const token = localStorage.getItem("token");
 
     try {
@@ -59,6 +81,13 @@ function AddProduct() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
       <div className="max-w-lg w-full p-8 bg-white rounded-xl shadow-lg">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="absolute top-4 left-4 text-indigo-600 font-semibold hover:text-indigo-800 flex items-center"
+        >
+          ← Back to Dashboard
+        </button>
         <h2 className="text-3xl font-bold text-center text-indigo-600 mb-8">Add New Product</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col gap-2">
@@ -73,6 +102,7 @@ function AddProduct() {
               required
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -88,6 +118,7 @@ function AddProduct() {
               required
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.price && <span className="text-red-500 text-sm">{errors.price}</span>}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -103,6 +134,7 @@ function AddProduct() {
               required
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.quantity && <span className="text-red-500 text-sm">{errors.quantity}</span>}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -117,6 +149,7 @@ function AddProduct() {
               required
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.location && <span className="text-red-500 text-sm">{errors.location}</span>}
           </div>
 
           <button

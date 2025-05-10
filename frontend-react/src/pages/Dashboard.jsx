@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import { toast } from 'react-toastify';
 
-
 function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation(); // 👈 For toast message
   const [userData, setUserData] = useState({ username: "", role: "" });
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minQty, setMinQty] = useState("");
+  const [maxQty, setMaxQty] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/auth");
+      navigate("/");
       return;
     }
 
@@ -25,9 +30,21 @@ function Dashboard() {
     } catch (err) {
       console.error("Invalid token");
       localStorage.removeItem("token");
-      navigate("/auth");
+      navigate("/");
     }
   }, [navigate]);
+
+  // ✅ Toast on successful product add
+   useEffect(() => {
+  if (location.state?.toastMessage) {
+    toast.success(location.state.toastMessage);
+
+    // Properly clear state after showing toast
+    navigate(location.pathname, { replace: true, state: {} });
+  }
+}, [location, navigate]);
+
+  
 
   const fetchProducts = async (token) => {
     try {
@@ -51,7 +68,7 @@ function Dashboard() {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(`http://localhost:5000/api/products/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`},
         });
         alert("Product deleted successfully.");
         setProducts(products.filter((p) => p._id !== id));
@@ -66,6 +83,22 @@ function Dashboard() {
     navigate(`/edit-product/${id}`);
   };
 
+  const filteredProducts = products.filter((p) => {
+    const matchSearch =
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.location.toLowerCase().includes(search.toLowerCase());
+
+    const withinPrice =
+      (!minPrice || p.price >= parseFloat(minPrice)) &&
+      (!maxPrice || p.price <= parseFloat(maxPrice));
+
+    const withinQty =
+      (!minQty || p.quantity >= parseInt(minQty)) &&
+      (!maxQty || p.quantity <= parseInt(maxQty));
+
+    return matchSearch && withinPrice && withinQty;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
@@ -78,7 +111,6 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Seller – Add Product */}
         {userData.role === "Seller" && (
           <div className="text-center mb-6">
             <Link to="/add-product">
@@ -89,7 +121,6 @@ function Dashboard() {
           </div>
         )}
 
-        {/* Buyer – Browse Products */}
         {userData.role === "Buyer" && (
           <div className="text-center mb-6">
             <Link to="/browse">
@@ -100,7 +131,6 @@ function Dashboard() {
           </div>
         )}
 
-        {/* Owner – View Stats */}
         {userData.role === "Owner" && (
           <div className="text-center mb-6">
             <Link to="/owner-stats">
@@ -111,41 +141,80 @@ function Dashboard() {
           </div>
         )}
 
-{(userData.role === "Admin" || userData.role === "Owner") && products.length > 0 && (
-  <div className="text-right mb-4">
-    <CSVLink
-      data={products.map(p => ({
-        name: p.name,
-        price: p.price,
-        quantity: p.quantity,
-        location: p.location,
-        createdBy: p.createdBy
-      }))}
-      headers={[
-        { label: "Product Name", key: "name" },
-        { label: "Price", key: "price" },
-        { label: "Quantity", key: "quantity" },
-        { label: "Location", key: "location" },
-        { label: "Created By", key: "createdBy" }
-      ]}
-      filename={"products_export.csv"}
-      className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-    >
-      Export to CSV
-    </CSVLink>
-  </div>
-)}
+        {(userData.role === "Admin" || userData.role === "Owner") && products.length > 0 && (
+          <div className="text-right mb-4">
+            <CSVLink
+              data={products.map(p => ({
+                name: p.name,
+                price: p.price,
+                quantity: p.quantity,
+                location: p.location,
+                createdBy: p.createdBy
+              }))}
+              headers={[
+                { label: "Product Name", key: "name" },
+                { label: "Price", key: "price" },
+                { label: "Quantity", key: "quantity" },
+                { label: "Location", key: "location" },
+                { label: "Created By", key: "createdBy" }
+              ]}
+              filename={"products_export.csv"}
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+            >
+              Export to CSV
+            </CSVLink>
+          </div>
+        )}
 
+        {userData.role === "Admin" && (
+          <div className="flex flex-wrap gap-4 justify-center mb-6">
+            <input
+              type="text"
+              placeholder="🔍 Search by name or location"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-60 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+            <input
+              type="number"
+              placeholder="Min Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+            <input
+              type="number"
+              placeholder="Min Quantity"
+              value={minQty}
+              onChange={(e) => setMinQty(e.target.value)}
+              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+            <input
+              type="number"
+              placeholder="Max Quantity"
+              value={maxQty}
+              onChange={(e) => setMaxQty(e.target.value)}
+              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            />
+          </div>
+        )}
 
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
           Products
         </h2>
 
-        {products.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <p className="text-gray-500">No products to display.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {products.map((p) => (
+            {filteredProducts.map((p) => (
               <div key={p._id} className="bg-gray-50 dark:bg-gray-700 rounded p-4 shadow">
                 <h3 className="text-lg font-bold text-purple-700">{p.name}</h3>
                 <p>Price: ₹{p.price}</p>
@@ -187,4 +256,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Dashboard; 

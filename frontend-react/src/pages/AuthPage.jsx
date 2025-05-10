@@ -30,7 +30,10 @@ function AuthPage() {
       });
       localStorage.setItem("token", res.data.token);
       toast.success("Login successful!"); // Show success toast
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+      
     } catch {
       setLoginError("Invalid credentials or server error.");
       toast.error("Login failed. Please check your credentials."); // Show error toast

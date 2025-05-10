@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { toast } from 'react-toastify';  // Import Toast
+ 
 
 function EditProduct() {
   const { id } = useParams();
@@ -24,7 +26,7 @@ function EditProduct() {
     try {
       const decoded = jwtDecode(token);
       if (decoded.role !== "Admin") {
-        alert("Access denied. Only Admins can edit products.");
+        toast.error("Access denied. Only Admins can edit products.");
         navigate("/dashboard");
         return;
       }
@@ -43,7 +45,7 @@ function EditProduct() {
 
       const product = res.data.find((p) => p._id === id);
       if (!product) {
-        alert("Product not found");
+        toast.error("Product not found");
         navigate("/dashboard");
         return;
       }
@@ -57,7 +59,7 @@ function EditProduct() {
       setLoading(false);
     } catch (err) {
       console.error("Fetch error:", err);
-      alert("Failed to load product.");
+      toast.error("Failed to load product.");
       navigate("/dashboard");
     }
   };
@@ -70,21 +72,20 @@ function EditProduct() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
     const token = localStorage.getItem("token");
+    await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    try {
-      await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    navigate("/dashboard", { state: { toastMessage: "Product updated successfully." } });
+  } catch (error) {
+    console.error("Update failed", error);
+    toast.error("Failed to update product.");
+  }
+};
 
-      alert("Product updated successfully.");
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Update error:", err);
-      alert("Failed to update product.");
-    }
-  };
 
   if (loading) return <p className="text-center mt-10 text-gray-600">Loading...</p>;
 
