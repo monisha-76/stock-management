@@ -222,22 +222,23 @@ function Dashboard() {
                 <p>Location: {p.location}</p>
                 <p className="text-sm text-gray-400 mt-1">By: {p.createdBy}</p>
 
-                {userData.role === "Admin" && (
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => handleEdit(p._id)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(p._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
+                {(userData.role === "Admin" || (userData.role === "Seller" && p.createdBy === userData.username)) && (
+  <div className="mt-4 flex gap-2">
+    <button
+      onClick={() => handleEdit(p._id)}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+    >
+      Edit
+    </button>
+    <button
+      onClick={() => handleDelete(p._id)}
+      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+    >
+      Delete
+    </button>
+  </div>
+)}
+
               </div>
             ))}
           </div>

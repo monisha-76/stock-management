@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { toast } from 'react-toastify';  // Import Toast
- 
+import { toast } from 'react-toastify';
 
 function EditProduct() {
   const { id } = useParams();
@@ -15,6 +14,7 @@ function EditProduct() {
     location: "",
   });
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,19 +25,14 @@ function EditProduct() {
 
     try {
       const decoded = jwtDecode(token);
-      if (decoded.role !== "Admin") {
-        toast.error("Access denied. Only Admins can edit products.");
-        navigate("/dashboard");
-        return;
-      }
-
-      fetchProduct(token);
+      setUser(decoded);
+      fetchProduct(token, decoded);
     } catch {
       navigate("/auth");
     }
   }, [id, navigate]);
 
-  const fetchProduct = async (token) => {
+  const fetchProduct = async (token, decoded) => {
     try {
       const res = await axios.get("http://localhost:5000/api/products", {
         headers: { Authorization: `Bearer ${token}` },
@@ -46,6 +41,19 @@ function EditProduct() {
       const product = res.data.find((p) => p._id === id);
       if (!product) {
         toast.error("Product not found");
+        navigate("/dashboard");
+        return;
+      }
+
+      // 🛡️ Role-based access check
+      if (decoded.role === "Seller" && product.createdBy !== decoded.username) {
+        toast.error("Access denied. You can only edit your own products.");
+        navigate("/dashboard");
+        return;
+      }
+
+      if (decoded.role !== "Admin" && decoded.role !== "Seller") {
+        toast.error("Access denied.");
         navigate("/dashboard");
         return;
       }
@@ -72,20 +80,19 @@ function EditProduct() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("token");
-    await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    navigate("/dashboard", { state: { toastMessage: "Product updated successfully." } });
-  } catch (error) {
-    console.error("Update failed", error);
-    toast.error("Failed to update product.");
-  }
-};
-
+      navigate("/dashboard", { state: { toastMessage: "Product updated successfully." } });
+    } catch (error) {
+      console.error("Update failed", error);
+      toast.error("Failed to update product.");
+    }
+  };
 
   if (loading) return <p className="text-center mt-10 text-gray-600">Loading...</p>;
 

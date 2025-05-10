@@ -13,6 +13,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Routes>
+        {/* Public route for authentication */}
         <Route path="/" element={<AuthPage />} />
 
         {/* Authenticated routes for all roles */}
@@ -26,9 +27,9 @@ function App() {
         </Route>
 
         {/* Admin Only */}
-        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
-          <Route path="/edit-product/:id" element={<EditProduct />} />
-        </Route>
+     <Route element={<ProtectedRoute allowedRoles={["Admin", "Seller"]} />}>
+  <Route path="/edit-product/:id" element={<EditProduct />} />
+</Route>
 
         {/* Buyer Only */}
         <Route element={<ProtectedRoute allowedRoles={["Buyer"]} />}>
@@ -41,6 +42,7 @@ function App() {
         </Route>
       </Routes>
 
+      {/* Global Toast Container */}
       <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );

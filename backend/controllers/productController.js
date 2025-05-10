@@ -2,7 +2,7 @@ const Product = require("../models/Product");
 const User = require("../models/User");
 const { maskData, unmaskData } = require("../utils/maskUtil");
 
-// Only for Sellers — masked data + creator tracking
+// ✅ Create product (Seller only)
 exports.createProduct = async (req, res) => {
   const { name, price, quantity, location } = req.body;
   try {
@@ -24,7 +24,7 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// Role-based GET: Sellers get their own, others get all
+// ✅ Role-based GET: Sellers get their own, others get all
 exports.getProductsByRole = async (req, res) => {
   const role = req.user.role;
   const username = req.user.username;
@@ -69,11 +69,20 @@ exports.getProductsByRole = async (req, res) => {
   }
 };
 
-// ✅ Admin can DELETE any product
+// ✅ Admin OR Seller (own product) can DELETE
 exports.deleteProduct = async (req, res) => {
   try {
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Product not found" });
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    if (
+      req.user.role === "Seller" &&
+      product.createdBy !== req.user.username
+    ) {
+      return res.status(403).json({ message: "Access denied: Not your product" });
+    }
+
+    await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted successfully" });
   } catch (err) {
     console.error("Error in deleteProduct:", err);
@@ -81,19 +90,29 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-// ✅ Admin can UPDATE any product
+// ✅ Admin OR Seller (own product) can UPDATE
 exports.updateProduct = async (req, res) => {
   const { name, price, quantity, location } = req.body;
 
   try {
-    const masked = maskData(`${name}-${location}`);
-    const updated = await Product.findByIdAndUpdate(
-      req.params.id,
-      { name, price, quantity, location, maskedData: masked },
-      { new: true }
-    );
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
 
-    if (!updated) return res.status(404).json({ message: "Product not found" });
+    if (
+      req.user.role === "Seller" &&
+      product.createdBy !== req.user.username
+    ) {
+      return res.status(403).json({ message: "Access denied: Not your product" });
+    }
+
+    const masked = maskData(`${name}-${location}`);
+    product.name = name;
+    product.price = price;
+    product.quantity = quantity;
+    product.location = location;
+    product.maskedData = masked;
+
+    const updated = await product.save();
 
     res.json({ message: "Product updated successfully", product: updated });
   } catch (err) {
@@ -131,5 +150,3 @@ exports.getOwnerStats = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-

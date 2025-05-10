@@ -1,30 +1,45 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const token = localStorage.getItem("token");
+  const location = useLocation();
+  const [isAuthorized, setIsAuthorized] = useState(null);
 
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  try {
-    const decoded = jwtDecode(token);
-    const userRole = decoded.role;
-
-    if (!allowedRoles.includes(userRole)) {
-      toast.error("Access denied: You are not authorized to view this page.", {
-        toastId: "unauthorized", // prevents duplicate toasts
-      });
-      return <Navigate to="/dashboard" replace />;
+    if (!token) {
+      setIsAuthorized(false);
+      return;
     }
 
-    return <Outlet />;
-  } catch (err) {
-    localStorage.removeItem("token");
-    return <Navigate to="/" replace />;
-  }
+    try {
+      const decoded = jwtDecode(token);
+      const userRole = decoded.role;
+
+      if (allowedRoles.includes(userRole)) {
+        setIsAuthorized(true);
+      } else {
+        toast.error("Access denied: You are not authorized to view this page.", {
+          toastId: "unauthorized",
+        });
+        setIsAuthorized(false);
+      }
+    } catch (err) {
+      localStorage.removeItem("token");
+      setIsAuthorized(false);
+    }
+  }, [allowedRoles]);
+
+  if (isAuthorized === null) return null; // or a loading indicator
+
+  return isAuthorized ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/dashboard" state={{ from: location }} replace />
+  );
 };
 
-export default ProtectedRoute;  
+export default ProtectedRoute;

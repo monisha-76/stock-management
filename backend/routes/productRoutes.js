@@ -17,10 +17,12 @@ router.post("/", auth, allowRoles("Seller"), createProduct);
 router.get("/", auth, getProductsByRole);
 
 // Delete product (Admin only)
-router.delete("/:id", auth, allowRoles("Admin"), deleteProduct);
+// Update product (Admin OR Seller — logic in controller handles ownership)
+router.put("/:id", auth, allowRoles("Admin", "Seller"), updateProduct);
 
-// Update product (Admin only)
-router.put("/:id", auth, allowRoles("Admin"), updateProduct);
+// Delete product (Admin OR Seller — logic in controller handles ownership)
+router.delete("/:id", auth, allowRoles("Admin", "Seller"), deleteProduct);
+
 const { getOwnerStats } = require("../controllers/productController");
 router.get("/stats/owner", auth, allowRoles("Owner"), getOwnerStats);
 
