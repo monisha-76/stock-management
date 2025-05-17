@@ -8,6 +8,7 @@ import StatsPage from "./pages/StatsPage";
 import EditProduct from "./pages/EditProduct";
 import BrowseProducts from "./pages/BrowseProducts";
 import ProtectedRoute from "./components/ProtectedRoute";
+import BuyerOrders from "./pages/BuyerOrders";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         {/* Buyer Only */}
         <Route element={<ProtectedRoute allowedRoles={["Buyer"]} />}>
           <Route path="/browse" element={<BrowseProducts />} />
+          <Route path="/my-orders" element={<BuyerOrders />} />
         </Route>
 
         {/* Owner Only */}

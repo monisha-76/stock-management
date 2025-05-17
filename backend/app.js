@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
+
+
 // Load environment variables
 dotenv.config();
 
@@ -24,6 +26,11 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/stats", require("./routes/statsRoutes"));
+app.use("/api/purchase", require("./routes/purchaseRoute")); // ✅ Already mentioned by you
+
+
+
+
 
  
 

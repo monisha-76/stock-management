@@ -121,15 +121,21 @@ function Dashboard() {
           </div>
         )}
 
-        {userData.role === "Buyer" && (
-          <div className="text-center mb-6">
-            <Link to="/browse">
-              <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">
-                Browse Products
-              </button>
-            </Link>
-          </div>
-        )}
+       {userData.role === "Buyer" && (
+      <div className="text-center mb-6 space-y-3">
+        <Link to="/browse">
+          <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg mr-3">
+            Browse Products
+          </button>
+        </Link>
+        <Link to="/my-orders">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+            View Orders
+          </button>
+        </Link>
+      </div>
+)}
+
 
         {userData.role === "Owner" && (
           <div className="text-center mb-6">
