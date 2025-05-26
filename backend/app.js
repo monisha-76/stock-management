@@ -3,8 +3,6 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-
-
 // Load environment variables
 dotenv.config();
 
@@ -16,7 +14,7 @@ const app = express();
 // ✅ CORS Configuration
 app.use(cors({
   origin: "http://localhost:5173", // React frontend
-  credentials: true,              // allow sending cookies or Authorization header
+  credentials: true,
 }));
 
 // Middleware
@@ -26,13 +24,11 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/stats", require("./routes/statsRoutes"));
-app.use("/api/purchase", require("./routes/purchaseRoute")); // ✅ Already mentioned by you
+app.use("/api/purchase", require("./routes/purchaseRoute"));
+app.use("/api/requests", require("./routes/productRequestRoutes")); // ✅ NEW LINE ADDED
+app.use('/api/offers', require("./routes/sellerOfferRoutes")); // adjust path if needed
 
 
-
-
-
- 
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

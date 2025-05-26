@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import html2pdf from "html2pdf.js";
+import "react-toastify/dist/ReactToastify.css";
 
 function BrowseProducts() {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ function BrowseProducts() {
   const [showInvoicePrompt, setShowInvoicePrompt] = useState(false);
   const [latestOrder, setLatestOrder] = useState(null);
   const [showInvoice, setShowInvoice] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,6 +35,7 @@ function BrowseProducts() {
         alert("Access denied");
         return navigate("/dashboard");
       }
+      setUserRole(decoded.role);
       fetchProducts(token);
     } catch {
       navigate("/");
@@ -50,6 +52,8 @@ function BrowseProducts() {
       console.error("Failed to fetch products:", err);
     }
   };
+
+  
 
   const filteredProducts = products.filter((p) => {
     const matchSearch =
@@ -103,7 +107,6 @@ function BrowseProducts() {
       setSelectedProduct(product);
       setShowInvoicePrompt(true);
 
-      // Reset form
       setQuantity(1);
       setDeliveryAddress("");
       setPurchaseError("");
@@ -121,6 +124,7 @@ function BrowseProducts() {
     const element = invoiceRef.current;
     html2pdf().from(element).save("invoice.pdf");
   };
+  
 
   return (
     <div className="min-h-screen bg-[#f9fafb] p-6">
@@ -138,12 +142,43 @@ function BrowseProducts() {
           </button>
         </div>
 
+        {/* Filter Section */}
         <div className="flex flex-wrap gap-4 justify-center mb-10">
-          <input type="text" placeholder="🔍 Search by name or location" value={search} onChange={(e) => setSearch(e.target.value)} className="w-60 px-4 py-2 border rounded-lg shadow-sm" />
-          <input type="number" placeholder="Min Price" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} className="w-40 px-4 py-2 border rounded-lg shadow-sm" />
-          <input type="number" placeholder="Max Price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} className="w-40 px-4 py-2 border rounded-lg shadow-sm" />
-          <input type="number" placeholder="Min Quantity" value={minQty} onChange={(e) => setMinQty(e.target.value)} className="w-40 px-4 py-2 border rounded-lg shadow-sm" />
-          <input type="number" placeholder="Max Quantity" value={maxQty} onChange={(e) => setMaxQty(e.target.value)} className="w-40 px-4 py-2 border rounded-lg shadow-sm" />
+          <input
+            type="text"
+            placeholder="🔍 Search by name or location"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-60 px-4 py-2 border rounded-lg shadow-sm"
+          />
+          <input
+            type="number"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="w-40 px-4 py-2 border rounded-lg shadow-sm"
+          />
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="w-40 px-4 py-2 border rounded-lg shadow-sm"
+          />
+          <input
+            type="number"
+            placeholder="Min Quantity"
+            value={minQty}
+            onChange={(e) => setMinQty(e.target.value)}
+            className="w-40 px-4 py-2 border rounded-lg shadow-sm"
+          />
+          <input
+            type="number"
+            placeholder="Max Quantity"
+            value={maxQty}
+            onChange={(e) => setMaxQty(e.target.value)}
+            className="w-40 px-4 py-2 border rounded-lg shadow-sm"
+          />
           <button
             onClick={() => {
               setSearch("");
@@ -158,12 +193,32 @@ function BrowseProducts() {
           </button>
         </div>
 
+        {/* Product Grid or Request Button */}
         {filteredProducts.length === 0 ? (
-          <p className="text-center text-gray-500 text-lg">No products match your filters.</p>
+          <>
+            <p className="text-center text-gray-500 text-lg mb-4">
+              No products match your filters.
+            </p>
+
+            {/* Show Request Button ONLY for Buyer */}
+            {userRole === "Buyer" && (
+              <div className="text-center">
+                <button
+                  onClick={() => navigate("/product-request")}
+                  className="px-6 py-3 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition"
+                >
+                  Request Product
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((p) => (
-              <div key={p._id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform">
+              <div
+                key={p._id}
+                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform"
+              >
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{p.name}</h3>
                 <p className="text-gray-700">💰 ₹{p.price}</p>
                 <p className="text-gray-700">📦 {p.quantity} available</p>
@@ -189,13 +244,33 @@ function BrowseProducts() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
               <h3 className="text-xl font-bold mb-4">Purchase {selectedProduct.name}</h3>
-              <input type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min="1" max={selectedProduct.quantity} className="w-full px-4 py-2 border rounded-lg mb-4" placeholder="Quantity" />
-              <textarea value={deliveryAddress} onChange={(e) => setDeliveryAddress(e.target.value)} className="w-full px-4 py-2 border rounded-lg mb-4" placeholder="Delivery Address" />
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                min="1"
+                max={selectedProduct.quantity}
+                className="w-full px-4 py-2 border rounded-lg mb-4"
+                placeholder="Quantity"
+              />
+              <textarea
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg mb-4"
+                placeholder="Delivery Address"
+              />
               {purchaseError && <p className="text-red-500 mb-2">{purchaseError}</p>}
-              <button onClick={() => handlePurchase(selectedProduct)} disabled={purchaseLoading} className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              <button
+                onClick={() => handlePurchase(selectedProduct)}
+                disabled={purchaseLoading}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
                 {purchaseLoading ? "Processing..." : "Confirm Purchase"}
               </button>
-              <button onClick={() => setSelectedProduct(null)} className="w-full px-4 py-2 bg-gray-400 text-white rounded mt-4 hover:bg-gray-500">
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="w-full px-4 py-2 bg-gray-400 text-white rounded mt-4 hover:bg-gray-500"
+              >
                 Cancel
               </button>
             </div>
@@ -207,71 +282,55 @@ function BrowseProducts() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
               <h3 className="text-lg font-bold mb-4">Purchase Successful</h3>
-              <p className="mb-4">Generate invoice for your order?</p>
+              <p className="mb-4">Would you like to download your invoice?</p>
               <div className="flex justify-end gap-4">
-                <button onClick={() => {
-                  setShowInvoicePrompt(false);
-                  setSelectedProduct(null);
-                }} className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">No</button>
-                <button onClick={() => {
-                  setShowInvoicePrompt(false);
-                  setShowInvoice(true);
-                }} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Yes, Generate</button>
+                <button
+                  onClick={() => {
+                    setShowInvoice(true);
+                    setShowInvoicePrompt(false);
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setShowInvoicePrompt(false)}
+                  className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
+                >
+                  No
+                </button>
               </div>
             </div>
           </div>
         )}
 
         {/* Invoice Modal */}
-        {showInvoice && latestOrder && selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-             <div ref={invoiceRef} style={{ padding: "20px", fontFamily: "Arial, sans-serif", color: "#333" }}>
-  <h2 style={{ textAlign: "center", fontSize: "24px", marginBottom: "20px" }}>Invoice</h2>
+        {showInvoice && latestOrder && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 overflow-auto p-6">
+            <div
+              ref={invoiceRef}
+              className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg relative"
+            >
+              <h2 className="text-2xl font-bold mb-6 text-center">Invoice</h2>
+              <p><strong>Order ID:</strong> {latestOrder._id}</p>
+              <p><strong>Product:</strong> {selectedProduct.name}</p>
+              <p><strong>Quantity:</strong> {latestOrder.quantity}</p>
+              <p><strong>Price per unit:</strong> ₹{selectedProduct.price}</p>
+              <p><strong>Total:</strong> ₹{selectedProduct.price * latestOrder.quantity}</p>
+              <p><strong>Delivery Address:</strong> {latestOrder.deliveryAddress}</p>
+              <p><strong>Date:</strong> {new Date(latestOrder.createdAt).toLocaleString()}</p>
 
-  <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
-    <tbody>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Product</td>
-        <td style={{ padding: "8px" }}>{selectedProduct.name}</td>
-      </tr>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Unit Price</td>
-        <td style={{ padding: "8px" }}>₹{selectedProduct.price}</td>
-      </tr>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Quantity</td>
-        <td style={{ padding: "8px" }}>{latestOrder.quantityPurchased}</td>
-      </tr>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Total Price</td>
-        <td style={{ padding: "8px" }}>₹{latestOrder.totalPrice}</td>
-      </tr>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Delivery Address</td>
-        <td style={{ padding: "8px" }}>{latestOrder.deliveryAddress}</td>
-      </tr>
-      <tr>
-        <td style={{ padding: "8px", fontWeight: "bold" }}>Order Time</td>
-        <td style={{ padding: "8px" }}>{new Date(latestOrder.purchasedAt).toLocaleString()}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p style={{ textAlign: "center", fontSize: "14px", marginTop: "30px" }}>
-    Thank you for your purchase!
-  </p>
-</div>
-
-              <div className="mt-6 flex justify-between">
-                <button onClick={handleDownloadInvoice} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                  Download Invoice
+              <div className="flex justify-between mt-6">
+                <button
+                  onClick={handleDownloadInvoice}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Download PDF
                 </button>
-                <button onClick={() => {
-                  setShowInvoice(false);
-                  setLatestOrder(null);
-                  setSelectedProduct(null);
-                }} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                <button
+                  onClick={() => setShowInvoice(false)}
+                  className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
+                >
                   Close
                 </button>
               </div>

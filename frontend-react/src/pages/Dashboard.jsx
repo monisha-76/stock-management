@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const location = useLocation(); // 👈 For toast message
+  const location = useLocation();
   const [userData, setUserData] = useState({ username: "", role: "" });
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
@@ -34,17 +34,12 @@ function Dashboard() {
     }
   }, [navigate]);
 
-  // ✅ Toast on successful product add
-   useEffect(() => {
-  if (location.state?.toastMessage) {
-    toast.success(location.state.toastMessage);
-
-    // Properly clear state after showing toast
-    navigate(location.pathname, { replace: true, state: {} });
-  }
-}, [location, navigate]);
-
-  
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      toast.success(location.state.toastMessage);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const fetchProducts = async (token) => {
     try {
@@ -68,7 +63,7 @@ function Dashboard() {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(`http://localhost:5000/api/products/${id}`, {
-          headers: { Authorization: `Bearer ${token}`},
+          headers: { Authorization: `Bearer ${token}` },
         });
         alert("Product deleted successfully.");
         setProducts(products.filter((p) => p._id !== id));
@@ -111,31 +106,36 @@ function Dashboard() {
           </p>
         </div>
 
-        {userData.role === "Seller" && (
-          <div className="text-center mb-6">
+       {userData.role === "Seller" && (
+          <div className="text-center mb-6 space-y-3">
             <Link to="/add-product">
-              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg mr-3">
                 Add New Product
+              </button>
+            </Link>
+            <Link to="/seller-requests">
+              <button className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg">
+                View Notified Requests
               </button>
             </Link>
           </div>
         )}
 
-       {userData.role === "Buyer" && (
-      <div className="text-center mb-6 space-y-3">
-        <Link to="/browse">
-          <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg mr-3">
-            Browse Products
-          </button>
-        </Link>
-        <Link to="/my-orders">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
-            View Orders
-          </button>
-        </Link>
-      </div>
-)}
 
+        {userData.role === "Buyer" && (
+          <div className="text-center mb-6 space-y-3">
+            <Link to="/browse">
+              <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg mr-3">
+                Browse Products
+              </button>
+            </Link>
+            <Link to="/my-orders">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+                View you Orders
+              </button>
+            </Link>
+          </div>
+        )}
 
         {userData.role === "Owner" && (
           <div className="text-center mb-6">
@@ -173,43 +173,54 @@ function Dashboard() {
         )}
 
         {userData.role === "Admin" && (
-          <div className="flex flex-wrap gap-4 justify-center mb-6">
-            <input
-              type="text"
-              placeholder="🔍 Search by name or location"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-60 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            />
-            <input
-              type="number"
-              placeholder="Min Price"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            />
-            <input
-              type="number"
-              placeholder="Max Price"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            />
-            <input
-              type="number"
-              placeholder="Min Quantity"
-              value={minQty}
-              onChange={(e) => setMinQty(e.target.value)}
-              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            />
-            <input
-              type="number"
-              placeholder="Max Quantity"
-              value={maxQty}
-              onChange={(e) => setMaxQty(e.target.value)}
-              className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            />
-          </div>
+          <>
+            <div className="flex flex-wrap gap-4 justify-center mb-6">
+              <input
+                type="text"
+                placeholder="🔍 Search by name or location"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-60 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              />
+              <input
+                type="number"
+                placeholder="Min Price"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              />
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              />
+              <input
+                type="number"
+                placeholder="Min Quantity"
+                value={minQty}
+                onChange={(e) => setMinQty(e.target.value)}
+                className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              />
+              <input
+                type="number"
+                placeholder="Max Quantity"
+                value={maxQty}
+                onChange={(e) => setMaxQty(e.target.value)}
+                className="w-40 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              />
+            </div>
+
+            {/* ✅ New Button to View Requests */}
+            <div className="text-center mb-6">
+              <Link to="/admin-requests">
+                <button className="bg-yellow-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg">
+                  View Product Requests
+                </button>
+              </Link>
+            </div>
+          </>
         )}
 
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
@@ -229,22 +240,21 @@ function Dashboard() {
                 <p className="text-sm text-gray-400 mt-1">By: {p.createdBy}</p>
 
                 {(userData.role === "Admin" || (userData.role === "Seller" && p.createdBy === userData.username)) && (
-  <div className="mt-4 flex gap-2">
-    <button
-      onClick={() => handleEdit(p._id)}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-    >
-      Edit
-    </button>
-    <button
-      onClick={() => handleDelete(p._id)}
-      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-    >
-      Delete
-    </button>
-  </div>
-)}
-
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => handleEdit(p._id)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(p._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -263,4 +273,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard; 
+export default Dashboard;

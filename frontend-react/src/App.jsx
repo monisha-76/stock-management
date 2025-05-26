@@ -9,6 +9,9 @@ import EditProduct from "./pages/EditProduct";
 import BrowseProducts from "./pages/BrowseProducts";
 import ProtectedRoute from "./components/ProtectedRoute";
 import BuyerOrders from "./pages/BuyerOrders";
+import AdminRequestList from './pages/AdminRequestList';
+import ProductRequestForm from './pages/ProductRequestForm';
+import SellerRequestList from './pages/SellerRequestList';
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
         {/* Seller Only */}
         <Route element={<ProtectedRoute allowedRoles={["Seller"]} />}>
           <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/seller-requests" element={<SellerRequestList />}/>
         </Route>
 
         {/* Admin Only */}
@@ -36,12 +40,19 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={["Buyer"]} />}>
           <Route path="/browse" element={<BrowseProducts />} />
           <Route path="/my-orders" element={<BuyerOrders />} />
+          <Route path="/product-request" element={<ProductRequestForm />} />
         </Route>
 
         {/* Owner Only */}
         <Route element={<ProtectedRoute allowedRoles={["Owner"]} />}>
           <Route path="/owner-stats" element={<StatsPage />} />
         </Route>
+
+        
+        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+         <Route path="/admin-requests" element={<AdminRequestList />} />
+        </Route>
+
       </Routes>
 
       {/* Global Toast Container */}
