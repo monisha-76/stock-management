@@ -12,7 +12,7 @@ import BuyerOrders from "./pages/BuyerOrders";
 import AdminRequestList from './pages/AdminRequestList';
 import ProductRequestForm from './pages/ProductRequestForm';
 import SellerRequestList from './pages/SellerRequestList';
-
+import MyOffers from './pages/MyOffers';
 function App() {
   return (
     <div className="min-h-screen bg-gray-100">
@@ -29,6 +29,8 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={["Seller"]} />}>
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/seller-requests" element={<SellerRequestList />}/>
+          <Route path="/seller/my-offers" element={<MyOffers />} />
+
         </Route>
 
         {/* Admin Only */}

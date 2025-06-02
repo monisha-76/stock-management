@@ -115,7 +115,13 @@ function Dashboard() {
             </Link>
             <Link to="/seller-requests">
               <button className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg">
-                View Notified Requests
+                View Requests
+              </button>
+            </Link>
+            <Link to="/seller/my-offers">
+
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg">
+                My Offers
               </button>
             </Link>
           </div>

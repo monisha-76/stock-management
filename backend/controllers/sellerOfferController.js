@@ -110,6 +110,22 @@ const getMyOfferRequestIds = async (req, res) => {
 };
 
 
+// @desc    Get all offers submitted by the logged-in seller
+// @route   GET /api/offers/seller
+// @access  Seller only
+const getMyOffers = async (req, res) => {
+  try {
+    const sellerId = req.user.id;
+
+    const offers = await SellerOffer.find({ seller: sellerId })
+      .populate('requestId', 'productName description status createdAt');
+
+    res.status(200).json(offers);
+  } catch (error) {
+    console.error('Error fetching seller offers:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
 
@@ -118,4 +134,5 @@ module.exports = {
   getOffersForRequest,
   acceptOffer,
   getMyOfferRequestIds,
+  getMyOffers,
 };
