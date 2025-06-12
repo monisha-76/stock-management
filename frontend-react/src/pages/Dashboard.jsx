@@ -132,7 +132,7 @@ function Dashboard() {
           <div className="text-center mb-6 space-y-3">
             <Link to="/browse">
               <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg mr-3">
-                Browse Products
+                purchase Products
               </button>
             </Link>
             <Link to="/my-orders">

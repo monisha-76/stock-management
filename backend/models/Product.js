@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  price: Number,
-  quantity: Number,
-  maskedData: String,
-  location: String,
-  createdBy: { type: String, required: true }, // Added to track product owner (username)
-  createdAt: { type: Date, default: Date.now }
+  name: { type: String, required: true },          // Product name
+  price: { type: Number, required: true },         // Price from accepted offer
+  quantity: { type: Number, required: true },      // Quantity from accepted offer
+  maskedData: { type: String, default: '' },       // Optional: for AES-masked info
+  location: { type: String, default: 'Not specified' }, // Delivery location or general stock location
+  createdBy: { type: String, required: true },     // Seller username or ID
+  createdAt: { type: Date, default: Date.now }     // Timestamp
 });
 
 module.exports = mongoose.model("Product", productSchema);

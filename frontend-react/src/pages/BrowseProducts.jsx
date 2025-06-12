@@ -314,11 +314,12 @@ function BrowseProducts() {
               <h2 className="text-2xl font-bold mb-6 text-center">Invoice</h2>
               <p><strong>Order ID:</strong> {latestOrder._id}</p>
               <p><strong>Product:</strong> {selectedProduct.name}</p>
-              <p><strong>Quantity:</strong> {latestOrder.quantity}</p>
+              <p><strong>Quantity:</strong> {latestOrder.quantityPurchased}</p>
               <p><strong>Price per unit:</strong> ₹{selectedProduct.price}</p>
-              <p><strong>Total:</strong> ₹{selectedProduct.price * latestOrder.quantity}</p>
+              <p><strong>Total:</strong> ₹{selectedProduct.price * latestOrder.quantityPurchased}</p>
               <p><strong>Delivery Address:</strong> {latestOrder.deliveryAddress}</p>
-              <p><strong>Date:</strong> {new Date(latestOrder.createdAt).toLocaleString()}</p>
+              <p><strong>Date:</strong> {new Date(latestOrder.purchasedAt).toLocaleString()}</p>
+
 
               <div className="flex justify-between mt-6">
                 <button

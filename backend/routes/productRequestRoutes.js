@@ -6,7 +6,7 @@ const {
   getAllRequests,
   broadcastToSellers,
   getNotifiedRequestsForSellers,
-   // ✅ Sellers submit offer via separate SellerOffer model
+  getMyRequests,  // <-- import the new controller function
 } = require('../controllers/productRequestController');
 
 const protect = require('../middleware/authMiddleware');
@@ -24,5 +24,7 @@ router.post('/:id/broadcast', protect, allowRoles('Admin'), broadcastToSellers);
 // 📌 Seller views notified product requests
 router.get('/notified', protect, allowRoles('Seller'), getNotifiedRequestsForSellers);
 
+// 📌 Buyer views their own product requests with accepted offer details
+router.get('/my-requests', protect, allowRoles('Buyer'), getMyRequests);
 
 module.exports = router;

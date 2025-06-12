@@ -1,5 +1,6 @@
 const ProductRequest = require('../models/ProductRequest');
-const SellerOffer = require('../models/SellerOffer'); // ✅ Import SellerOffer model
+const SellerOffer = require('../models/SellerOffer');
+// ✅ Import SellerOffer model
 
 // @desc    Create a new product request
 // @route   POST /api/requests
@@ -118,10 +119,34 @@ const fulfillRequest = async (req, res) => {
   }
 };
 
+const getMyRequests = async (req, res) => {
+  try {
+    const buyerId = req.user.id;
+
+    const requests = await ProductRequest.find({ buyer: buyerId })
+      .populate({
+        path: 'acceptedOffer',
+        populate: {
+          path: 'seller',
+          select: 'username email',
+        }
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(requests);
+  } catch (error) {
+    console.error('Error fetching buyer requests:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
 module.exports = {
   createProductRequest,
   getAllRequests,
   broadcastToSellers,
   getNotifiedRequestsForSellers,
   fulfillRequest,
+  getMyRequests,
 };

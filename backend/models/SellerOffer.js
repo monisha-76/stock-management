@@ -1,4 +1,3 @@
-// models/SellerOffer.js
 const mongoose = require('mongoose');
 
 const sellerOfferSchema = new mongoose.Schema({
@@ -22,6 +21,11 @@ const sellerOfferSchema = new mongoose.Schema({
   },
   message: {
     type: String,
+  },
+  location: {            // <--- NEW FIELD
+    type: String,
+    required: true,
+    default: 'Not Specified',     // You can set false if optional
   },
   status: {
     type: String,
