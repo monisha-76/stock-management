@@ -106,10 +106,10 @@ function Dashboard() {
           </p>
         </div>
 
-       {userData.role === "Seller" && (
-          <div className="text-center mb-6 space-y-3">
+        {userData.role === "Seller" && (
+          <div className="text-center mb-6 space-y-3 space-x-4">
             <Link to="/add-product">
-              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg mr-3">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 Add New Product
               </button>
             </Link>
@@ -239,6 +239,13 @@ function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredProducts.map((p) => (
               <div key={p._id} className="bg-gray-50 dark:bg-gray-700 rounded p-4 shadow">
+                {p.imageUrl && (
+                  <img
+                    src={p.imageUrl}
+                    alt="product image"
+                    className="w-full h-48 object-contain rounded-md mb-4 shadow"
+                  />
+                )}
                 <h3 className="text-lg font-bold text-purple-700">{p.name}</h3>
                 <p>Price: ₹{p.price}</p>
                 <p>Quantity: {p.quantity}</p>

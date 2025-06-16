@@ -12,7 +12,8 @@ const SellerNotifiedRequests = () => {
     quantity: '',
     price: '',
     message: '',
-    location: '', 
+    location: '',
+    image: ''
   });
 
   useEffect(() => {
@@ -45,6 +46,15 @@ const SellerNotifiedRequests = () => {
     } catch (err) {
       toast.error('Failed to load your submitted offers.');
     }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setOfferData(prev => ({ ...prev, image: reader.result }));
+    };
+    if (file) reader.readAsDataURL(file);
   };
 
   const handleSubmitOffer = async () => {
@@ -106,14 +116,13 @@ const SellerNotifiedRequests = () => {
                           quantity: '',
                           price: '',
                           message: '',
-                          location: '', 
+                          location: '',
                         });
                       }}
-                      className={`px-3 py-1 rounded ${
-                        isSubmitted
-                          ? 'bg-gray-400 text-white cursor-not-allowed'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
+                      className={`px-3 py-1 rounded ${isSubmitted
+                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
                       disabled={isSubmitted}
                     >
                       {isSubmitted ? 'Offer Submitted' : 'Propose Offer'}
@@ -146,7 +155,7 @@ const SellerNotifiedRequests = () => {
             />
             <input
               type="number"
-              placeholder="Price"
+              placeholder="Price per quantity"
               value={offerData.price}
               onChange={(e) => setOfferData({ ...offerData, price: e.target.value })}
               className="w-full border p-2 mb-2 rounded"
@@ -158,13 +167,24 @@ const SellerNotifiedRequests = () => {
               className="w-full border p-2 mb-4 rounded"
             ></textarea>
 
-        <input
+            <input
               type="text"
               placeholder="Location"
               value={offerData.location}
               onChange={(e) => setOfferData({ ...offerData, location: e.target.value })}
               className="w-full border p-2 mb-4 rounded"
-         />
+            />
+
+            <div className="mb-4">
+              <label className="block text-gray-600 mb-1">Upload Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+                className="w-full border p-2 rounded text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
 
             <div className="flex justify-end gap-2">
               <button

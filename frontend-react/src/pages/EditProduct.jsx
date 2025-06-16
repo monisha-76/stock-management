@@ -12,6 +12,7 @@ function EditProduct() {
     price: "",
     quantity: "",
     location: "",
+    image: "",
   });
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -63,6 +64,7 @@ function EditProduct() {
         price: product.price,
         quantity: product.quantity,
         location: product.location,
+        image: product.imageUrl,
       });
       setLoading(false);
     } catch (err) {
@@ -77,6 +79,15 @@ function EditProduct() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    if (file) reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -101,22 +112,39 @@ function EditProduct() {
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl">
         <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">Edit Product</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
-          {["name", "price", "quantity", "location"].map((field) => (
+          {["name", "price", "quantity", "location", "image"].map((field) => (
             <div key={field}>
               <label className="block text-gray-700 font-medium capitalize mb-1">
-                {field === "location" ? "Warehouse Location" : field}
+                {field === "location"
+                  ? "Warehouse Location"
+                  : field === "image"
+                    ? "Upload Product Image"
+                    : field}
               </label>
-              <input
-                type={field === "price" || field === "quantity" ? "number" : "text"}
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 hover:border-blue-400 transition duration-200"
-                placeholder={`Enter ${field}`}
-                required
-              />
+
+              {field === "image" ? (
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange} // <- handle file separately
+                  className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 hover:border-blue-400 transition duration-200"
+                  required
+                />
+              ) : (
+                <input
+                  type={field === "price" || field === "quantity" ? "number" : "text"}
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 hover:border-blue-400 transition duration-200"
+                  placeholder={`Enter ${field}`}
+                  required
+                />
+              )}
             </div>
           ))}
+
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform transition-all duration-200 text-white font-semibold py-2 rounded-lg"

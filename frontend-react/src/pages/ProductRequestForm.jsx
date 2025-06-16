@@ -141,9 +141,9 @@ const ProductRequestForm = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
+              <option value="Low">Low (Needed in a week)</option>
+              <option value="Medium">Medium (Needed in couple of days)</option>
+              <option value="High">High (Needed Immediately)</option>
             </select>
           </div>
 

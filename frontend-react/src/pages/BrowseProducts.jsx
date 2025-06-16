@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import html2pdf from "html2pdf.js";
@@ -53,7 +53,7 @@ function BrowseProducts() {
     }
   };
 
-  
+
 
   const filteredProducts = products.filter((p) => {
     const matchSearch =
@@ -124,7 +124,7 @@ function BrowseProducts() {
     const element = invoiceRef.current;
     html2pdf().from(element).save("invoice.pdf");
   };
-  
+
 
   return (
     <div className="min-h-screen bg-[#f9fafb] p-6">
@@ -219,6 +219,13 @@ function BrowseProducts() {
                 key={p._id}
                 className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform"
               >
+                {p.imageUrl && (
+                  <img
+                    src={p.imageUrl}
+                    alt="product image"
+                    className="w-full h-48 object-contain rounded-md mb-4 shadow"
+                  />
+                )}
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{p.name}</h3>
                 <p className="text-gray-700">💰 ₹{p.price}</p>
                 <p className="text-gray-700">📦 {p.quantity} available</p>

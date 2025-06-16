@@ -9,6 +9,7 @@ function AddProduct() {
     price: "",
     quantity: "",
     location: "",
+    image: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -59,6 +60,16 @@ function AddProduct() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    if (file) reader.readAsDataURL(file);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -150,6 +161,20 @@ function AddProduct() {
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             {errors.location && <span className="text-red-500 text-sm">{errors.location}</span>}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="image" className="text-lg font-medium text-gray-700">
+              Product Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+              className="w-full p-2 border-2 border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            {errors.image && <span className="text-red-500 text-sm">{errors.image}</span>}
           </div>
 
           <button
