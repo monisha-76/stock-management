@@ -1,13 +1,14 @@
 const SellerOffer = require('../models/SellerOffer');
 const ProductRequest = require('../models/ProductRequest');
 const Product = require('../models/Product');
+const cloudinary = require('cloudinary').v2;
 
 // @desc    Submit a new offer for a product request
 // @route   POST /api/offers/:requestId
 // @access  Seller only
 const submitOffer = async (req, res) => {
   try {
-    const { quantity, price, message, location } = req.body;  // added location
+    const { quantity, price, message, location, image } = req.body;  // added location
     const sellerId = req.user.id;
     const requestId = req.params.requestId;
 
@@ -26,13 +27,17 @@ const submitOffer = async (req, res) => {
       return res.status(400).json({ message: 'You have already submitted an offer for this request' });
     }
 
+    const uploadResult = await cloudinary.uploader.upload(image, {
+      folder: "products",
+    });
     const offer = new SellerOffer({
       seller: sellerId,
       requestId,
       quantity,
       price,
       message,
-      location,   // add location here
+      location,
+      imageUrl: uploadResult.secure_url   
     });
 
     await offer.save();
@@ -96,6 +101,7 @@ const acceptOffer = async (req, res) => {
       price: offer.price,
       quantity: offer.quantity,
       location: offer.location || 'Not specified',
+      imageUrl : offer.imageUrl,
       maskedData: '', // Optional: Set if you're masking data
       createdBy: offer.seller.username,
     });

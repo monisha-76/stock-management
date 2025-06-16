@@ -27,6 +27,9 @@ const sellerOfferSchema = new mongoose.Schema({
     required: true,
     default: 'Not Specified',     // You can set false if optional
   },
+  imageUrl : {
+    type: String
+  },
   status: {
     type: String,
     enum: ['Pending', 'Accepted', 'Rejected'],

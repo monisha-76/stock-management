@@ -1,25 +1,37 @@
 const Product = require("../models/Product");
 const User = require("../models/User");
 const { maskData, unmaskData } = require("../utils/maskUtil");
+const cloudinary = require('cloudinary').v2;
+
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // ✅ Create product (Seller only)
 exports.createProduct = async (req, res) => {
-  const { name, price, quantity, location } = req.body;
+  const { name, price, quantity, location, image } = req.body;
   try {
     const masked = maskData(`${name}-${location}`);
+    const uploadResult = await cloudinary.uploader.upload(image, {
+      folder: "products",
+    });
     const product = new Product({
       name,
       price,
       quantity,
       location,
       maskedData: masked,
-      createdBy: req.user.username
+      createdBy: req.user.username,
+      imageUrl: uploadResult.secure_url,
     });
 
     await product.save();
     res.status(201).json({ message: "Product created", product });
   } catch (err) {
-    console.error("Error in createProduct:", err); 
+    console.error("Error in createProduct:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -55,6 +67,7 @@ exports.getProductsByRole = async (req, res) => {
         price: p.price,
         quantity: p.quantity,
         location: p.location,
+        imageUrl: p.imageUrl,
         maskedData: p.maskedData,
         unmaskedData: unmasked,
         createdBy: p.createdBy,
@@ -92,7 +105,7 @@ exports.deleteProduct = async (req, res) => {
 
 // ✅ Admin OR Seller (own product) can UPDATE
 exports.updateProduct = async (req, res) => {
-  const { name, price, quantity, location } = req.body;
+  const { name, price, quantity, location, image } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
@@ -106,11 +119,15 @@ exports.updateProduct = async (req, res) => {
     }
 
     const masked = maskData(`${name}-${location}`);
+    const uploadResult = await cloudinary.uploader.upload(image, {
+      folder: "products",
+    });
     product.name = name;
     product.price = price;
     product.quantity = quantity;
     product.location = location;
     product.maskedData = masked;
+    product.imageUrl = uploadResult.secure_url;
 
     const updated = await product.save();
 
