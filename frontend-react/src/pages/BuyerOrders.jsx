@@ -42,7 +42,7 @@ function BuyerOrders() {
         <h1 className="text-2xl font-bold">My Order History</h1>
         <button
           onClick={() => navigate("/dashboard")}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="hover:bg-gray-300 bg-gray-200 text-black px-4 py-2 rounded  transition"
         >
           ← Back
         </button>

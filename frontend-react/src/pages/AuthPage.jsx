@@ -82,7 +82,7 @@ function AuthPage() {
       >
         {/* Login Box */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-12 w-full max-w-md bg-opacity-80">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-200 mb-6 text-center">Login</h2>
+          <h2 className="text-2xl font-bold text-gray-700 dark:text-blue-200 mb-6 text-center">Login</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="text"
@@ -104,7 +104,7 @@ function AuthPage() {
             {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg"
             >
               Login
             </button>
@@ -113,7 +113,7 @@ function AuthPage() {
 
         {/* Signup Box */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-12 w-full max-w-md bg-opacity-80">
-          <h2 className="text-2xl font-bold text-green-700 dark:text-green-200 mb-6 text-center">Register</h2>
+          <h2 className="text-2xl font-bold text-gray-700 dark:text-green-200 mb-6 text-center">Register</h2>
           <form onSubmit={handleSignup} className="space-y-4">
             <input
               type="text"
@@ -145,7 +145,7 @@ function AuthPage() {
             {signupSuccess && <p className="text-green-600 text-sm">{signupSuccess}</p>}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg"
             >
               Signup
             </button>

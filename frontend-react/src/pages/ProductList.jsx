@@ -51,9 +51,9 @@ function ProductList() {
               </div>
             )}
             <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
-            <p className="text-gray-700">💰 Price: ₹{product.price}</p>
-            <p className="text-gray-700">📦 Quantity: {product.quantity}</p>
-            <p className="text-gray-700">📍 Location: {product.location}</p>
+            <p className="text-gray-700">Price: ₹{product.price}</p>
+            <p className="text-gray-700">Quantity: {product.quantity}</p>
+            <p className="text-gray-700">Location: {product.location}</p>
             <p className="text-sm text-gray-400 mt-2">By: {product.createdBy || "N/A"}</p>
           </div>
         ))}

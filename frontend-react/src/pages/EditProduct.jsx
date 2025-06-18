@@ -110,7 +110,7 @@ function EditProduct() {
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 transition-all duration-300 hover:shadow-2xl">
-        <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">Edit Product</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Product</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           {["name", "price", "quantity", "location", "image"].map((field) => (
             <div key={field}>
@@ -147,7 +147,7 @@ function EditProduct() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform transition-all duration-200 text-white font-semibold py-2 rounded-lg"
+            className="w-full bg-purple-600 hover:bg-purple-700 hover:scale-105 transform transition-all duration-200 text-white font-semibold py-2 rounded-lg"
           >
             Update Product
           </button>

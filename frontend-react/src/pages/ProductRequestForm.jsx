@@ -154,7 +154,7 @@ const ProductRequestForm = () => {
               className={`w-full py-3 rounded-lg font-semibold text-white transition ${
                 loading
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-purple-600 hover:bg-purple-700'
               }`}
             >
               {loading ? 'Submitting...' : 'Submit Request'}

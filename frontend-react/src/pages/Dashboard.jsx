@@ -98,12 +98,10 @@ function Dashboard() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-700 dark:text-white">
-            Welcome, {userData.username}!
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            WELCOME, {userData.username.toUpperCase()}
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300">
-            Role: <strong>{userData.role}</strong>
-          </p>
+
         </div>
 
         {userData.role === "Seller" && (
@@ -114,13 +112,13 @@ function Dashboard() {
               </button>
             </Link>
             <Link to="/seller-requests">
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 View Requests
               </button>
             </Link>
             <Link to="/seller/my-offers">
 
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 My Offers
               </button>
             </Link>
@@ -129,14 +127,14 @@ function Dashboard() {
 
 
         {userData.role === "Buyer" && (
-          <div className="text-center mb-6 space-y-3">
+          <div className="text-center mb-6 space-y-3 space-x-3">
             <Link to="/browse">
-              <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg mr-3">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 purchase Products
               </button>
             </Link>
             <Link to="/my-orders">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 View you Orders
               </button>
             </Link>
@@ -146,7 +144,7 @@ function Dashboard() {
         {userData.role === "Owner" && (
           <div className="text-center mb-6">
             <Link to="/owner-stats">
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg">
+              <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                 View Statistics
               </button>
             </Link>
@@ -171,7 +169,7 @@ function Dashboard() {
                 { label: "Created By", key: "createdBy" }
               ]}
               filename={"products_export.csv"}
-              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+              className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700"
             >
               Export to CSV
             </CSVLink>
@@ -221,7 +219,7 @@ function Dashboard() {
             {/* ✅ New Button to View Requests */}
             <div className="text-center mb-6">
               <Link to="/admin-requests">
-                <button className="bg-yellow-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg">
+                <button className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
                   View Product Requests
                 </button>
               </Link>
@@ -229,9 +227,6 @@ function Dashboard() {
           </>
         )}
 
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-          Products
-        </h2>
 
         {filteredProducts.length === 0 ? (
           <p className="text-gray-500">No products to display.</p>
@@ -246,20 +241,23 @@ function Dashboard() {
                     className="w-full h-48 object-contain rounded-md mb-4 shadow"
                   />
                 )}
-                <h3 className="text-lg font-bold text-purple-700">{p.name}</h3>
-                <p>Price: ₹{p.price}</p>
-                <p>Quantity: {p.quantity}</p>
-                <p>Location: {p.location}</p>
-                <p className="text-sm text-gray-400 mt-1">By: {p.createdBy}</p>
+                <div className="space-y-1">
+                  <h3 className="text-lg font-bold text-gray-700">{p.name}</h3>
+                  <p>Price: ₹{p.price}</p>
+                  <p>Quantity: {p.quantity}</p>
+                  <p>Location: {p.location}</p>
+                </div>
 
                 {(userData.role === "Admin" || (userData.role === "Seller" && p.createdBy === userData.username)) && (
                   <div className="mt-4 flex gap-2">
+                    {userData.role !== "Admin" &&
                     <button
                       onClick={() => handleEdit(p._id)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded"
                     >
                       Edit
                     </button>
+                    }
                     <button
                       onClick={() => handleDelete(p._id)}
                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"

@@ -137,10 +137,10 @@ const AdminRequestList = () => {
                         <button
                           onClick={() => handleBroadcast(req._id)}
                           disabled={broadcastingId === req._id}
-                          className={`px-4 py-1 rounded-md font-semibold text-white transition ${
+                          className={`px-4 py-1 rounded-md  text-black transition ${
                             broadcastingId === req._id
                               ? 'bg-gray-400 cursor-not-allowed'
-                              : 'bg-blue-600 hover:bg-blue-700'
+                              : 'hover:text-gray-800 hover:underline text-black'
                           }`}
                         >
                           {broadcastingId === req._id ? 'Broadcasting...' : 'Broadcast to Sellers'}
@@ -149,7 +149,7 @@ const AdminRequestList = () => {
                       {req.status === 'Notified' && (
                         <button
                           onClick={() => handleViewOffers(req._id)}
-                          className="px-4 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md"
+                          className="px-4 py-1  hover:text-gray-800 hover:underline text-black rounded-md"
                         >
                           {viewingRequestId === req._id ? 'Hide Offers' : 'View Offers'}
                         </button>

@@ -121,7 +121,7 @@ const SellerNotifiedRequests = () => {
                       }}
                       className={`px-3 py-1 rounded ${isSubmitted
                         ? 'bg-gray-400 text-white cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-purple-600 text-white hover:bg-purple-700'
                         }`}
                       disabled={isSubmitted}
                     >
@@ -189,13 +189,13 @@ const SellerNotifiedRequests = () => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setSelectedRequest(null)}
-                className="px-4 py-2 border rounded"
+                className="px-4 py-2 border rounded hover:bg-gray-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmitOffer}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded"
               >
                 Submit
               </button>

@@ -15,6 +15,7 @@ function AddProduct() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const [role, setRole] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -61,14 +62,9 @@ function AddProduct() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData(prev => ({ ...prev, image: reader.result }));
-    };
-    if (file) reader.readAsDataURL(file);
-  };
+const handleImageChange = (e) => {
+  setImageFile(e.target.files[0]);
+};
 
 
   const handleSubmit = async (e) => {
@@ -95,11 +91,11 @@ function AddProduct() {
         {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="absolute top-4 left-4 text-indigo-600 font-semibold hover:text-indigo-800 flex items-center"
+          className="absolute top-4 left-4 text-gray-500 font-semibold hover:text-gray-600 flex items-center"
         >
           ← Back to Dashboard
         </button>
-        <h2 className="text-3xl font-bold text-center text-indigo-600 mb-8">Add New Product</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Add New Product</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col gap-2">
             <label htmlFor="name" className="text-lg font-medium text-gray-700">
@@ -179,7 +175,7 @@ function AddProduct() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition duration-300 ease-in-out"
+            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition duration-300 ease-in-out"
           >
             Add Product
           </button>

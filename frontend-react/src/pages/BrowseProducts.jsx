@@ -136,7 +136,7 @@ function BrowseProducts() {
         <div className="mb-6">
           <button
             onClick={() => navigate("/dashboard")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+            className="px-4 py-2  text-black rounded-lg shadow bg-gray-200 hover:bg-gray-300 transition"
           >
             ← Back to Dashboard
           </button>
@@ -205,7 +205,7 @@ function BrowseProducts() {
               <div className="text-center">
                 <button
                   onClick={() => navigate("/product-request")}
-                  className="px-6 py-3 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 transition"
+                  className="px-6 py-3 bg-purple-500 text-white rounded-lg shadow hover:bg-purple-600 transition"
                 >
                   Request Product
                 </button>
@@ -226,10 +226,10 @@ function BrowseProducts() {
                     className="w-full h-48 object-contain rounded-md mb-4 shadow"
                   />
                 )}
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{p.name}</h3>
-                <p className="text-gray-700">💰 ₹{p.price}</p>
-                <p className="text-gray-700">📦 {p.quantity} available</p>
-                <p className="text-gray-700">📍 {p.location}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">{p.name.toUpperCase()}</h3>
+                <p className="text-gray-900">Price : ₹{p.price}</p>
+                <p className="text-gray-900">Quantity : {p.quantity} available</p>
+                <p className="text-gray-900">Location : {p.location}</p>
                 <p className="text-sm text-gray-400 mt-2">By: {p.createdBy}</p>
                 <button
                   onClick={() => {
@@ -237,7 +237,7 @@ function BrowseProducts() {
                     setQuantity(1);
                     setPurchaseError("");
                   }}
-                  className="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  className="w-full mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
                 >
                   Purchase
                 </button>
@@ -270,7 +270,7 @@ function BrowseProducts() {
               <button
                 onClick={() => handlePurchase(selectedProduct)}
                 disabled={purchaseLoading}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
               >
                 {purchaseLoading ? "Processing..." : "Confirm Purchase"}
               </button>
@@ -296,7 +296,7 @@ function BrowseProducts() {
                     setShowInvoice(true);
                     setShowInvoicePrompt(false);
                   }}
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
                 >
                   Yes
                 </button>
@@ -331,7 +331,7 @@ function BrowseProducts() {
               <div className="flex justify-between mt-6">
                 <button
                   onClick={handleDownloadInvoice}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
                 >
                   Download PDF
                 </button>

@@ -74,12 +74,12 @@ function StatsPage() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-6">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow w-full max-w-4xl">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-yellow-600 mb-6 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
           Owner Dashboard - Statistics
         </h2>
         <button
           onClick={() => navigate("/dashboard")}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          className="px-4 py-2 bg-gray-200 text-black rounded-lg shadow hover:bg-gray-300 transition"
         >
           ← Back to Dashboard
         </button>
@@ -133,7 +133,7 @@ function StatsPage() {
 
         {/* Top Sellers Bar Chart */}
         <div className="mt-10">
-          <h3 className="text-xl font-semibold text-center text-pink-600 mb-4">🏆 Top Sellers (By Quantity)</h3>
+          <h3 className="text-xl font-semibold text-center text-gray-900 mb-4">Top Sellers (By Quantity)</h3>
           {stats.topSellers.length > 0 ? (
             <Bar
               data={topSellersData}
