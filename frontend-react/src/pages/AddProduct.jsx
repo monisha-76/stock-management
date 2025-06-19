@@ -15,7 +15,7 @@ function AddProduct() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const [role, setRole] = useState("");
-  const [imageFile, setImageFile] = useState(null);
+ 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -62,9 +62,14 @@ function AddProduct() {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleImageChange = (e) => {
-  setImageFile(e.target.files[0]);
-};
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }));
+    };
+    if (file) reader.readAsDataURL(file);
+  };
 
 
   const handleSubmit = async (e) => {
