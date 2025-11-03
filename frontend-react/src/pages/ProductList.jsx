@@ -17,7 +17,7 @@ function ProductList() {
       setRole(decoded.role);
 
       axios
-        .get("http://localhost:5000/api/products", {
+        .get("https://stock-management-i40c.onrender.com/api/products", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setProducts(res.data))

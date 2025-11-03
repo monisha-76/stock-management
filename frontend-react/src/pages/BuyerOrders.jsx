@@ -17,7 +17,7 @@ function BuyerOrders() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/purchase/my-orders", {
+      const res = await axios.get("https://stock-management-i40c.onrender.com/api/purchase/my-orders", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -22,7 +22,7 @@ const AdminRequestList = () => {
     setError(null);
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('http://localhost:5000/api/requests', {
+      const { data } = await axios.get('https://stock-management-i40c.onrender.com/api/requests', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRequests(data);

@@ -35,7 +35,7 @@ function EditProduct() {
 
   const fetchProduct = async (token, decoded) => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products", {
+      const res = await axios.get("https://stock-management-i40c.onrender.com/api/products", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -94,7 +94,7 @@ function EditProduct() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/api/products/${id}`, formData, {
+      await axios.put(`https://stock-management-i40c.onrender.com/api/products/${id}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

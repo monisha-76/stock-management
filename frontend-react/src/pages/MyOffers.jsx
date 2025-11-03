@@ -10,7 +10,7 @@ const MyOffers = () => {
     const fetchMyOffers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/offers/seller', {
+        const res = await axios.get('https://stock-management-i40c.onrender.com/api/offers/seller', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

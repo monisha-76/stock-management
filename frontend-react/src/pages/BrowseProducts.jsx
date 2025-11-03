@@ -44,7 +44,7 @@ function BrowseProducts() {
 
   const fetchProducts = async (token) => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products", {
+      const res = await axios.get("https://stock-management-i40c.onrender.com/api/products", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(res.data);
@@ -91,7 +91,7 @@ function BrowseProducts() {
     setPurchaseLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/purchase",
+        "https://stock-management-i40c.onrender.com/api/purchase",
         {
           productId: product._id,
           quantity,

@@ -25,7 +25,7 @@ const SellerNotifiedRequests = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('http://localhost:5000/api/requests/notified', {
+      const { data } = await axios.get('https://stock-management-i40c.onrender.com/api/requests/notified', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRequests(data);
@@ -39,7 +39,7 @@ const SellerNotifiedRequests = () => {
   const fetchSubmittedOffers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('http://localhost:5000/api/offers/seller/my-offers', {
+      const { data } = await axios.get('https://stock-management-i40c.onrender.com/api/offers/seller/my-offers', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSubmittedOffers(data); // data is array of request IDs
@@ -61,7 +61,7 @@ const SellerNotifiedRequests = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/offers/${selectedRequest._id}`,
+        `https://stock-management-i40c.onrender.com/api/offers/${selectedRequest._id}`,
         offerData,
         {
           headers: { Authorization: `Bearer ${token}` },

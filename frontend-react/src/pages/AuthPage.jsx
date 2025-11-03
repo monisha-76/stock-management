@@ -24,7 +24,7 @@ function AuthPage() {
     e.preventDefault();
     setLoginError("");
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("https://stock-management-i40c.onrender.com/api/auth/login", {
         username: loginUsername,
         password: loginPassword,
       });
@@ -45,7 +45,7 @@ function AuthPage() {
     setSignupError("");
     setSignupSuccess("");
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post("https://stock-management-i40c.onrender.com/api/auth/register", {
         username: signupUsername,
         password: signupPassword,
         role: signupRole,
