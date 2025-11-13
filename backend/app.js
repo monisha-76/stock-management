@@ -13,7 +13,10 @@ const app = express();
 
 // ✅ CORS Configuration
 app.use(cors({
-  origin: "http://localhost:5173", // React frontend
+  origin: [
+    "http://localhost:5173",
+    "https://stock-management-omega-vert.vercel.app"
+  ],
   credentials: true,
 }));
 
