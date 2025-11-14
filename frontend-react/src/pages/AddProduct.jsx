@@ -77,7 +77,6 @@ function AddProduct() {
     if (!validate()) return;
 
     const token = localStorage.getItem("token");
-
     try {
       await axios.post("https://stock-management-i40c.onrender.com/api/products", formData, {
         headers: { Authorization: `Bearer ${token}` },
