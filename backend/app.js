@@ -15,7 +15,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://stock-management-omega-vert.vercel.app"
+    "https://stock-management-omega-vert.vercel.app",
+    "https://frontend-react-ten-taupe.vercel.app"
   ],
   credentials: true,
 }));
