@@ -22,7 +22,7 @@ const AdminRequestList = () => {
     setError(null);
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('https://stock-management-i40c.onrender.com/api/requests', {
+      const { data } = await axios.get('http://16.171.138.104:5000/api/requests', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRequests(data);
@@ -38,7 +38,7 @@ const AdminRequestList = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/requests/${requestId}/broadcast`,
+        `http://16.171.138.104:5000/api/requests/${requestId}/broadcast`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -62,7 +62,7 @@ const AdminRequestList = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get(`http://localhost:5000/api/offers/request/${requestId}`, {
+      const { data } = await axios.get(`http://16.171.138.104:5000/api/offers/request/${requestId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOffersMap((prev) => ({ ...prev, [requestId]: data }));
@@ -77,7 +77,7 @@ const AdminRequestList = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/offers/${offerId}/accept`,
+        `http://16.171.138.104:5000/api/offers/${offerId}/accept`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

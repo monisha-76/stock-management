@@ -43,7 +43,7 @@ function Dashboard() {
 
   const fetchProducts = async (token) => {
     try {
-      const res = await axios.get("https://stock-management-i40c.onrender.com/api/products", {
+      const res = await axios.get("http://16.171.138.104:5000/api/products", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(res.data);
@@ -62,7 +62,7 @@ function Dashboard() {
     const token = localStorage.getItem("token");
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`https://stock-management-i40c.onrender.com/api/products/${id}`, {
+        await axios.delete(`http://16.171.138.104:5000/api/products/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Product deleted successfully.");

@@ -33,7 +33,7 @@ const ProductRequestForm = () => {
   setLoading(true);
   try {
     const res = await axios.post(
-      'https://stock-management-i40c.onrender.com/api/requests',
+      'http://16.171.138.104:5000/api/requests',
       { productName, description, quantity, urgency },
       {
         headers: {

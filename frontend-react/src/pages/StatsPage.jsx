@@ -48,7 +48,7 @@ function StatsPage() {
 
   const fetchStats = async (token) => {
     try {
-      const res = await axios.get("https://stock-management-i40c.onrender.com/api/stats", {
+      const res = await axios.get("http://16.171.138.104:5000/api/stats", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
