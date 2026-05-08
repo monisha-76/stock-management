@@ -97,12 +97,18 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            WELCOME, {userData.username.toUpperCase()}
-          </h1>
+        <div className="flex justify-between items-center mb-6">
+  <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+    WELCOME, {userData.username.toUpperCase()}
+  </h1>
 
-        </div>
+  <button
+    onClick={handleLogout}
+    className="bg-red-600 hover:bg-red-700 text-white py-2 px-5 rounded-lg"
+  >
+    Logout
+  </button>
+</div>
 
         {userData.role === "Seller" && (
           <div className="text-center mb-6 space-y-3 space-x-4">
@@ -271,14 +277,6 @@ function Dashboard() {
           </div>
         )}
 
-        <div className="mt-8 text-center">
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg"
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );
